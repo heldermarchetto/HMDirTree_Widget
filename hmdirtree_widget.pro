@@ -10,13 +10,14 @@
 ; 1) HMDirTree_Widget does not issue one spawn command per folder. Issuing
 ;    so many spawn commands made the windows task bar go crazy.
 ; 2) HMDirTree_Widget does not handle files, only folders.
-; 3) HMDirTree_Widget has no dependancies
+; 3) HMDirTree_Widget has no dependencies
 ; 4) HMDirTree_Widget always starts by searching for the available fixed 
 ;    drives (hard drives and network drives) and creating a list.  
 ;    To avoid hanging on slow network connections, the network drives are 
 ;    listed, but only explored when the user selects them.
 ; 5) HMDirTree_Widget allows only to select single directories, not multiple.
 ; 6) HMDirTree_Widget works only with IDL versions 8.0 or higher.
+; 7) HMDirTree_Widget works only under Windows
 ;    
 ; CATEGORY:
 ; Widgets.
@@ -719,8 +720,13 @@ if n_elements(event_func) eq 0 then event_func=''
 if n_elements(event_pro) eq 0 then event_pro=''
 if keyword_set(debug) then debug=1 else debug=0
 
-if float(!version.release) le 5.0 then begin
-  message,'HMDirTree requires IDL5.1 or greater.',/info
+if float(!version.release) le 8.0 then begin
+  message,'HMDirTree requires IDL8.0 or greater.',/info
+  return,0
+endif
+
+if strupcase(!version.os_family) ne 'WINDOWS' then begin
+  message,'HMDirTree runs only under Windows.',/info
   return,0
 endif
 
